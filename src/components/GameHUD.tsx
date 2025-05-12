@@ -51,3 +51,5 @@ const GameHUD: React.FC<GameHUDProps> = ({
     </div>
   );
 };
+
+export default GameHUD
