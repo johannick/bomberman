@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { CellType, PowerUpType } from '../types/game';
+import { CellType, PowerUpType, PowerUpCell } from '../types/game';
 
 const BOARD_SIZE = 13;
 
@@ -35,6 +35,12 @@ export const useGameLogic = () => {
   const [gameBoard, setGameBoard] = useState<CellType[][]>(createInitialBoard());
   const [playerPosition, setPlayerPosition] = useState({ x: 1, y: 1 });
   const [score, setScore] = useState(0);
+  const [powerUps, setPowerUps] = useState<PowerUpType[]>([]);
+
+  const collectPowerUp = useCallback((powerUpType: PowerUpType) => {
+    setPowerUps(prev => [...prev, powerUpType]);
+    setScore(prev => prev + 200); // Bonus points for collecting power-up
+  }, []);
 
   const placeBomb = useCallback((x: number, y: number) => {
     setGameBoard(prev => {
@@ -59,13 +65,13 @@ export const useGameLogic = () => {
           ) {
             if (newBoard[newY][newX] === 'brick') {
               setScore(s => s + 100);
-              // 30% chance to spawn a power-up
               if (Math.random() < 0.3) {
                 const randomPowerUp = POWER_UP_TYPES[Math.floor(Math.random() * POWER_UP_TYPES.length)];
-                newBoard[newY][newX] = 'powerUp';
+                newBoard[newY][newX] = { powerUpType: randomPowerUp };
+              } else {
+                newBoard[newY][newX] = 'explosion';
               }
-            }
-            if (newBoard[newY][newX] !== 'powerUp') {
+            } else if (typeof newBoard[newY][newX] !== 'object') {
               newBoard[newY][newX] = 'explosion';
             }
           }
@@ -120,17 +126,26 @@ export const useGameLogic = () => {
       }
 
       const targetCell = gameBoard[newY][newX];
-      if (targetCell === 'empty' || targetCell === 'powerUp') {
+      if (targetCell === 'empty' || typeof targetCell === 'object') {
+        if (typeof targetCell === 'object' && 'powerUpType' in targetCell) {
+          collectPowerUp(targetCell.powerUpType);
+          setGameBoard(prev => {
+            const newBoard = [...prev.map(row => [...row])];
+            newBoard[newY][newX] = 'empty';
+            return newBoard;
+          });
+        }
         return { x: newX, y: newY };
       }
       return prev;
     });
-  }, [gameBoard, placeBomb]);
+  }, [gameBoard, placeBomb, collectPowerUp]);
 
   return {
     gameBoard,
     playerPosition,
     handleKeyDown,
-    score
+    score,
+    powerUps
   };
 };

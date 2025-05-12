@@ -23,7 +23,11 @@ export interface PowerUp {
   duration?: number;
 }
 
-export type CellType = 'empty' | 'wall' | 'brick' | 'bomb' | 'explosion' | 'powerUp';
+export interface PowerUpCell {
+  powerUpType: PowerUpType;
+}
+
+export type CellType = 'empty' | 'wall' | 'brick' | 'bomb' | 'explosion' | PowerUpCell;
 
 export const DEFAULT_POWER_UPS: PowerUp[] = [
   { type: 'fire', active: false },
