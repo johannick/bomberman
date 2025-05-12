@@ -15,7 +15,7 @@ export interface GameState {
   isPaused: boolean;
 }
 
-export type PowerUpType = 'speed' | 'fire' | 'bombCount' | 'bombRange' | 'bombPower' | 'remoteControl';
+export type PowerUpType = 'speed' | 'bombCount' | 'bombRange' | 'bombPower' | 'remoteControl';
 
 export interface PowerUp {
   type: PowerUpType;
@@ -30,7 +30,6 @@ export interface PowerUpCell {
 export type CellType = 'empty' | 'wall' | 'brick' | 'bomb' | 'explosion' | PowerUpCell;
 
 export const DEFAULT_POWER_UPS: PowerUp[] = [
-  { type: 'fire', active: false },
   { type: 'speed', active: false },
   { type: 'bombCount', active: false },
   { type: 'bombRange', active: false },

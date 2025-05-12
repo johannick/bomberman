@@ -1,5 +1,5 @@
-import { useState, useCallback, useEffect } from 'react';
-import { CellType, PowerUpType, PowerUpCell } from '../types/game';
+import { useState, useCallback } from 'react';
+import { CellType, PowerUpType } from '../types/game';
 
 const BOARD_SIZE = 13;
 
@@ -29,7 +29,7 @@ const createInitialBoard = (): CellType[][] => {
   return board;
 };
 
-const POWER_UP_TYPES: PowerUpType[] = ['speed', 'fire', 'bombCount', 'bombRange', 'bombPower', 'remoteControl'];
+const POWER_UP_TYPES: PowerUpType[] = ['speed', 'bombCount', 'bombRange', 'bombPower', 'remoteControl'];
 
 export const useGameLogic = () => {
   const [gameBoard, setGameBoard] = useState<CellType[][]>(createInitialBoard());
