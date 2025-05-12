@@ -23,6 +23,8 @@ export interface PowerUp {
   duration?: number; // in seconds, undefined means permanent
 }
 
+export type CellType = 'empty' | 'wall' | 'brick' | 'bomb' | 'explosion';
+
 export const DEFAULT_POWER_UPS: PowerUp[] = [
   { type: 'fire', active: false },
   { type: 'speed', active: false },

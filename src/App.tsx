@@ -1,33 +1,41 @@
+import { useEffect, useRef, useState } from 'react';
 import GameOverlay from './components/GameOverlay';
 import './styles/game.css';
 import { INITIAL_GAME_STATE } from './types/game';
-
+import { GameBoard } from './components/GameBoard';
+import { useGameLogic } from './hooks/useGameLogic';
 
 function App() {
+  const [gameState, setGameState] = useState({ ...INITIAL_GAME_STATE });
+  const gameRef = useRef<HTMLDivElement>(null);
+  const { handleKeyDown, gameBoard, playerPosition, score } = useGameLogic();
 
-  const gameState = { ...INITIAL_GAME_STATE};
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown]);
+
+  useEffect(() => {
+    setGameState(prev => ({
+      ...prev,
+      players: [{ ...prev.players[0], score }]
+    }));
+  }, [score]);
 
   function pauseToggle() {
-    gameState.isPaused = !gameState.isPaused;
+    setGameState(prev => ({ ...prev, isPaused: !prev.isPaused }));
   }
 
   function levelEnd() {
-    gameState.isGameOver = true;
+    setGameState(prev => ({ ...prev, isGameOver: true }));
   }
 
   return (
     <div className="game-container">
-      {/* Game content */}
-      <div className="game-content">
-        <div className="game-placeholder">
-          <div className="bomberman-sprite idle" />
-          <h2 className="text-2xl font-bold mb-4">Bomberman</h2>
-          <p>Game content would render here.</p>
-          <p>This is just the HUD overlay demo.</p>
-        </div>
+      <div className="game-content" ref={gameRef}>
+        <GameBoard board={gameBoard} playerPosition={playerPosition} />
       </div>
       
-      {/* Game HUD Overlay */}
       <GameOverlay 
         gameState={gameState}
         onPauseToggle={pauseToggle}
