@@ -36,10 +36,25 @@ export const useGameLogic = () => {
   const [playerPosition, setPlayerPosition] = useState({ x: 1, y: 1 });
   const [score, setScore] = useState(0);
   const [powerUps, setPowerUps] = useState<PowerUpType[]>([]);
+  const [lives, setLives] = useState(3);
+  const [isGameOver, setIsGameOver] = useState(false);
+
+  const checkPlayerDamage = useCallback((newBoard: CellType[][]) => {
+    const playerCell = newBoard[playerPosition.y][playerPosition.x];
+    if (playerCell === 'explosion') {
+      setLives(prev => {
+        const newLives = prev - 1;
+        if (newLives <= 0) {
+          setIsGameOver(true);
+        }
+        return newLives;
+      });
+    }
+  }, [playerPosition]);
 
   const collectPowerUp = useCallback((powerUpType: PowerUpType) => {
     setPowerUps(prev => [...prev, powerUpType]);
-    setScore(prev => prev + 200); // Bonus points for collecting power-up
+    setScore(prev => prev + 200);
   }, []);
 
   const placeBomb = useCallback((x: number, y: number) => {
@@ -77,6 +92,7 @@ export const useGameLogic = () => {
           }
         });
         
+        checkPlayerDamage(newBoard);
         return newBoard;
       });
 
@@ -94,9 +110,11 @@ export const useGameLogic = () => {
         });
       }, 500);
     }, 2000);
-  }, []);
+  }, [checkPlayerDamage]);
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (isGameOver) return;
+    
     const key = e.key.toLowerCase();
     
     setPlayerPosition(prev => {
@@ -139,13 +157,15 @@ export const useGameLogic = () => {
       }
       return prev;
     });
-  }, [gameBoard, placeBomb, collectPowerUp]);
+  }, [gameBoard, placeBomb, collectPowerUp, isGameOver]);
 
   return {
     gameBoard,
     playerPosition,
     handleKeyDown,
     score,
-    powerUps
+    powerUps,
+    lives,
+    isGameOver
   };
 };

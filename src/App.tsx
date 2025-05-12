@@ -8,7 +8,7 @@ import { useGameLogic } from './hooks/useGameLogic';
 function App() {
   const [gameState, setGameState] = useState({ ...INITIAL_GAME_STATE });
   const gameRef = useRef<HTMLDivElement>(null);
-  const { handleKeyDown, gameBoard, playerPosition, score } = useGameLogic();
+  const { handleKeyDown, gameBoard, playerPosition, score, lives, isGameOver } = useGameLogic();
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
@@ -18,9 +18,10 @@ function App() {
   useEffect(() => {
     setGameState(prev => ({
       ...prev,
-      players: [{ ...prev.players[0], score }]
+      players: [{ ...prev.players[0], score, lives }],
+      isGameOver
     }));
-  }, [score]);
+  }, [score, lives, isGameOver]);
 
   function pauseToggle() {
     setGameState(prev => ({ ...prev, isPaused: !prev.isPaused }));
@@ -46,5 +47,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
