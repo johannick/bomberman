@@ -40,6 +40,8 @@ function App() {
         gameState={gameState}
         onPauseToggle={pauseToggle}
         onTimeEnd={levelEnd}
+        mapData={gameBoard}
+        playerPosition={playerPosition}
       />
     </div>
   );

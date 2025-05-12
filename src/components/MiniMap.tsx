@@ -1,26 +1,13 @@
 import React from 'react';
+import { CellType } from '../types/game';
 
 interface MiniMapProps {
   size?: number;
+  mapData: CellType[][];
+  playerPosition: { x: number; y: number };
 }
 
-// This is a simplified version of a mini-map
-// In a real game, you would get actual map data from the game state
-const MiniMap: React.FC<MiniMapProps> = ({ size = 100 }) => {
-  // Mock map data - in a real game, this would come from the game state
-  const mapData = [
-    [1, 1, 1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 0, 0, 1],
-    [1, 0, 1, 0, 1, 0, 1],
-    [1, 0, 0, 0, 0, 0, 1],
-    [1, 0, 1, 0, 1, 0, 1],
-    [1, 0, 0, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1, 1, 1],
-  ];
-  
-  // Player position - in a real game, this would come from the game state
-  const playerPosition = { x: 1, y: 1 };
-  
+const MiniMap: React.FC<MiniMapProps> = ({ size = 100, mapData, playerPosition }) => {
   const cellSize = size / mapData.length;
   
   return (
@@ -35,7 +22,10 @@ const MiniMap: React.FC<MiniMapProps> = ({ size = 100 }) => {
             <div
               key={`${x}-${y}`}
               className={`absolute ${
-                cell === 1 ? 'bg-gray-700' : 'bg-gray-900'
+                cell === 'wall' ? 'bg-gray-700' :
+                cell === 'brick' ? 'bg-orange-700' :
+                cell === 'powerUp' ? 'bg-yellow-500' :
+                'bg-gray-900'
               }`}
               style={{
                 left: x * cellSize,

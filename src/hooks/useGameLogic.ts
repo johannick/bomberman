@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { CellType } from '../types/game';
+import { CellType, PowerUpType } from '../types/game';
 
 const BOARD_SIZE = 13;
 
@@ -7,7 +7,6 @@ const createInitialBoard = (): CellType[][] => {
   const board: CellType[][] = Array(BOARD_SIZE).fill(null)
     .map(() => Array(BOARD_SIZE).fill('empty'));
 
-  // Add walls in a grid pattern
   for (let y = 0; y < BOARD_SIZE; y++) {
     for (let x = 0; x < BOARD_SIZE; x++) {
       if (x % 2 === 1 && y % 2 === 1) {
@@ -23,13 +22,14 @@ const createInitialBoard = (): CellType[][] => {
     }
   }
 
-  // Ensure starting area is clear
   board[1][1] = 'empty';
   board[1][2] = 'empty';
   board[2][1] = 'empty';
 
   return board;
 };
+
+const POWER_UP_TYPES: PowerUpType[] = ['speed', 'fire', 'bombCount', 'bombRange', 'bombPower', 'remoteControl'];
 
 export const useGameLogic = () => {
   const [gameBoard, setGameBoard] = useState<CellType[][]>(createInitialBoard());
@@ -43,7 +43,6 @@ export const useGameLogic = () => {
       return newBoard;
     });
 
-    // Bomb explosion after 2 seconds
     setTimeout(() => {
       setGameBoard(prev => {
         const newBoard = [...prev.map(row => [...row])];
@@ -60,15 +59,21 @@ export const useGameLogic = () => {
           ) {
             if (newBoard[newY][newX] === 'brick') {
               setScore(s => s + 100);
+              // 30% chance to spawn a power-up
+              if (Math.random() < 0.3) {
+                const randomPowerUp = POWER_UP_TYPES[Math.floor(Math.random() * POWER_UP_TYPES.length)];
+                newBoard[newY][newX] = 'powerUp';
+              }
             }
-            newBoard[newY][newX] = 'explosion';
+            if (newBoard[newY][newX] !== 'powerUp') {
+              newBoard[newY][newX] = 'explosion';
+            }
           }
         });
         
         return newBoard;
       });
 
-      // Clear explosions after 0.5 seconds
       setTimeout(() => {
         setGameBoard(prev => {
           const newBoard = [...prev.map(row => [...row])];
@@ -114,7 +119,8 @@ export const useGameLogic = () => {
           return prev;
       }
 
-      if (gameBoard[newY][newX] === 'empty') {
+      const targetCell = gameBoard[newY][newX];
+      if (targetCell === 'empty' || targetCell === 'powerUp') {
         return { x: newX, y: newY };
       }
       return prev;

@@ -20,10 +20,10 @@ export type PowerUpType = 'speed' | 'fire' | 'bombCount' | 'bombRange' | 'bombPo
 export interface PowerUp {
   type: PowerUpType;
   active: boolean;
-  duration?: number; // in seconds, undefined means permanent
+  duration?: number;
 }
 
-export type CellType = 'empty' | 'wall' | 'brick' | 'bomb' | 'explosion';
+export type CellType = 'empty' | 'wall' | 'brick' | 'bomb' | 'explosion' | 'powerUp';
 
 export const DEFAULT_POWER_UPS: PowerUp[] = [
   { type: 'fire', active: false },
@@ -36,7 +36,7 @@ export const DEFAULT_POWER_UPS: PowerUp[] = [
 
 export const INITIAL_GAME_STATE: GameState = {
   currentLevel: 1,
-  timeRemaining: 180, // 3 minutes
+  timeRemaining: 180,
   players: [
     {
       id: 1,
