@@ -1,4 +1,3 @@
-/* Game styles */
 .game-container {
   position: relative;
   width: 100%;
@@ -15,65 +14,79 @@
   justify-content: center;
 }
 
-.game-placeholder {
-  text-align: center;
-  color: white;
-  padding: 2rem;
-  background-color: rgba(0, 0, 0, 0.3);
-  border-radius: 0.5rem;
+.game-board {
+  background-color: #2d3748;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Special Effects */
+.cell {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #4a5568;
+  background-color: #1a202c;
+}
+
+.wall {
+  background-color: #4a5568;
+  border: 2px solid #2d3748;
+}
+
+.brick {
+  background-color: #ed8936;
+  border: 2px solid #dd6b20;
+}
+
+.player {
+  background-color: #4299e1;
+  border-radius: 50%;
+  border: 2px solid #3182ce;
+}
+
+.bomb {
+  background-color: #1a202c;
+  border: 2px solid #e53e3e;
+  border-radius: 50%;
+  animation: bomb-pulse 0.5s infinite;
+}
+
+.explosion {
+  background-color: #f56565;
+  animation: explosion 0.5s;
+}
+
+.powerUp {
+  background-color: #ecc94b;
+  border: 2px solid #d69e2e;
+  animation: powerup-glow 1s infinite;
+}
+
+@keyframes powerup-glow {
+  0% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.8; }
+}
+
+@keyframes bomb-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+@keyframes explosion {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
 .shadow-glow {
   box-shadow: 0 0 8px currentColor, 0 0 4px currentColor;
 }
 
-/* Animations */
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.1);
-    opacity: 0.9;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.animate-pulse {
-  animation: pulse 2s infinite;
-}
-
-/* Bomberman Sprite */
-.bomberman-sprite {
-  width: 64px;
-  height: 64px;
-  margin: 0 auto 1rem;
-  image-rendering: pixelated;
-  background-image: url('/Character.png');
-  background-repeat: no-repeat;
-  background-size: 832px 64px; /* 13 frames * 64px width */
-}
-
-.bomberman-sprite.idle {
-  animation: bombermanIdle 0.8s steps(1) infinite;
-}
-
-@keyframes bombermanIdle {
-  0% { background-position: 0 0; }
-  25% { background-position: -64px 0; }
-  50% { background-position: -128px 0; }
-  75% { background-position: -64px 0; }
-}
-
-/* Responsive adjustments */
 @media (max-width: 768px) {
-  .game-placeholder {
-    padding: 1rem;
-    max-width: 90%;
+  .cell {
+    width: 30px;
+    height: 30px;
   }
 }

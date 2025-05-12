@@ -2,18 +2,22 @@ import React from 'react';
 import { Play, Pause, Settings } from 'lucide-react';
 import GameHUD from './GameHUD';
 import GameSettings from './GameSettings';
-import { GameState } from '../types/game';
+import { GameState, CellType } from '../types/game';
 
 interface GameOverlayProps {
   gameState: GameState;
   onPauseToggle: () => void;
   onTimeEnd?: () => void;
+  mapData: CellType[][];
+  playerPosition: { x: number; y: number };
 }
 
 const GameOverlay: React.FC<GameOverlayProps> = ({ 
   gameState, 
   onPauseToggle, 
-  onTimeEnd 
+  onTimeEnd,
+  mapData,
+  playerPosition
 }) => {
   const [showSettings, setShowSettings] = React.useState(false);
   const [settings, setSettings] = React.useState({
@@ -24,16 +28,16 @@ const GameOverlay: React.FC<GameOverlayProps> = ({
 
   return (
     <div className="absolute inset-0 pointer-events-none flex flex-col">
-      {/* Top HUD */}
       <div className="w-full p-4 pointer-events-auto">
         <GameHUD 
           gameState={gameState} 
           onTimeEnd={onTimeEnd}
           className="shadow-lg"
+          mapData={mapData}
+          playerPosition={playerPosition}
         />
       </div>
       
-      {/* Control Buttons - Bottom Right */}
       <div className="absolute bottom-4 right-4 pointer-events-auto flex gap-2">
         <button 
           onClick={() => setShowSettings(true)}
@@ -53,14 +57,12 @@ const GameOverlay: React.FC<GameOverlayProps> = ({
         </button>
       </div>
       
-      {/* Pause Overlay */}
       {gameState.isPaused && (
         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center pointer-events-auto">
           <div className="text-white text-4xl font-bold">PAUSED</div>
         </div>
       )}
       
-      {/* Game Over Overlay */}
       {gameState.isGameOver && (
         <div className="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center pointer-events-auto">
           <div className="bg-gray-900 p-8 rounded-lg text-center">
@@ -73,7 +75,6 @@ const GameOverlay: React.FC<GameOverlayProps> = ({
         </div>
       )}
 
-      {/* Settings Modal */}
       <GameSettings
         isOpen={showSettings}
         onClose={() => setShowSettings(false)}
