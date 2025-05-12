@@ -1,0 +1,79 @@
+/* Game styles */
+.game-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background-color: #1f2937;
+  overflow: hidden;
+}
+
+.game-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.game-placeholder {
+  text-align: center;
+  color: white;
+  padding: 2rem;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 0.5rem;
+}
+
+/* Special Effects */
+.shadow-glow {
+  box-shadow: 0 0 8px currentColor, 0 0 4px currentColor;
+}
+
+/* Animations */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s infinite;
+}
+
+/* Bomberman Sprite */
+.bomberman-sprite {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 1rem;
+  image-rendering: pixelated;
+  background-image: url('/Character.png');
+  background-repeat: no-repeat;
+  background-size: 832px 64px; /* 13 frames * 64px width */
+}
+
+.bomberman-sprite.idle {
+  animation: bombermanIdle 0.8s steps(1) infinite;
+}
+
+@keyframes bombermanIdle {
+  0% { background-position: 0 0; }
+  25% { background-position: -64px 0; }
+  50% { background-position: -128px 0; }
+  75% { background-position: -64px 0; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .game-placeholder {
+    padding: 1rem;
+    max-width: 90%;
+  }
+}
